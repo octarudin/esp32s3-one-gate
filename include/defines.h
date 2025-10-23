@@ -3,6 +3,7 @@
 #define __DEFINES_H
 
 /* Private defines -----------------------------------------------------------*/
+// INPUT
 // 48  Loop to Esp Input In
 // 47  Loop to Esp Input loop 2
 // 21  Loop to Esp Input Loop 1 Out
@@ -22,21 +23,21 @@
 #define ESP_TO_BARRIER_DOWN     40
 #define ESP_TO_BARRIER_STOP     41
 
+// OUTPUT
 // 1    Manless to Esp Input Stop
 // 2    Manless to Esp Input Down 
 // 42   Manless to Esp Up
-#define MANLESS_IN_TO_ESP_IN_STOP   1
-#define MANLESS_IN_TO_ESP_IN_DOWN   2
-#define MANLESS_IN_TO_ESP_UP        42
+#define ESP_TO_MANLESS_IN_STOP   1
+#define ESP_TO_MANLESS_IN_DOWN   2
+#define ESP_TO_MANLESS_IN_UP     42
 
 // 41  Manless to Esp Stop -> 8
 // 40  Manless to Esp Down -> 3
 // 39  Manless to Esp Up -> 46
-#define MANLESS_OUT_TO_ESP_STOP     8
-#define MANLESS_OUT_TO_ESP_DOWN     3
-#define MANLESS_OUT_TO_ESP_UP       46
+#define ESP_TO_MANLESS_OUT_STOP     8
+#define ESP_TO_MANLESS_OUT_DOWN     3
+#define ESP_TO_MANLESS_OUT_UP       46
 
-// Output
 // 4 Esp to manless
 // 5 Esp to manless
 // 6 Esp to manless
