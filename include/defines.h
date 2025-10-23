@@ -10,9 +10,9 @@
 #define LOOP_TO_ESP_LOOP2       47
 #define LOOP_TO_ESP_LOOP1_OUT   21
 
-// 36  Barrier to Esp Input LS 1
+// 36  Barrier to Esp Input LS 1 -> 35
 // 37  Barrier to Esp Input LS 2
-#define BARRIER_TO_ESP_LS1      36
+#define BARRIER_TO_ESP_LS1      35
 #define BARRIER_TO_ESP_LS2      37
 
 // 39  Esp to Barrier Output Up
