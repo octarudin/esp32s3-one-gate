@@ -22,13 +22,9 @@
 
 /* Private variables ---------------------------------------------------------*/
 String str;
-hw_timer_t *timer = NULL;
-const int TIMER_TIMEOUT_US = 10000;  // 10 ms (dalam mikrodetik)
-volatile bool timerExpired = false;
+boolean strCompleted;
 
 /* Private function prototypes -----------------------------------------------*/
-void IRAM_ATTR onTimer();
-void resetTimer();
 void processCommand(String command);
 
 /**
@@ -69,9 +65,6 @@ void setup() {
 
   /* Initialize all configured peripherals */
   Serial.begin(115200);
-  timer = timerBegin(0, 80, true);       // Timer 0, prescaler 80 → 1 tick = 1 µs
-  timerAttachInterrupt(timer, &onTimer, true);
-  timerAlarmWrite(timer, TIMER_TIMEOUT_US, false);  // Non-reload (once)
 }
 
 /* Infinite loop */
@@ -92,39 +85,22 @@ void loop() {
 
   /* handling outputs */
   while (Serial.available() > 0) {
-    str += (char)Serial.read();
-    timerAlarmEnable(timer);
-    resetTimer();
+    char c = (char)Serial.read();
+    if (c == '\n') {
+      strCompleted = true;
+    } else {
+      str += c;
+    }
   }
 
-  if (timerExpired) {
+  if (strCompleted) {
     processCommand(str);
     str = "";
-    timerAlarmDisable(timer);
-    resetTimer();
   }
 
   delay(1000);
 }
 
-/**
-  * @brief On timer callback
-  * @param None
-  * @retval None
-  */
-void IRAM_ATTR onTimer() {
-  timerExpired = true;
-}
-
-/**
-  * @brief Reset timer
-  * @param None
-  * @retval None
-  */
-void resetTimer() {
-  timerWrite(timer, 0);   // Reset hitungan timer ke 0
-  timerExpired = false;   // Pastikan flag tidak aktif
-}
 
 /**
   * @brief Fungsi untuk parsing dan eksekusi perintah
