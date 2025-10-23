@@ -29,12 +29,12 @@
 #define MANLESS_IN_TO_ESP_IN_DOWN   2
 #define MANLESS_IN_TO_ESP_UP        42
 
-// 41  Manless to Esp Stop
-// 40  Manless to Esp Down
-// 39  Manless to Esp Up
-#define MANLESS_OUT_TO_ESP_STOP     41
-#define MANLESS_OUT_TO_ESP_DOWN     40
-#define MANLESS_OUT_TO_ESP_UP       39
+// 41  Manless to Esp Stop -> 8
+// 40  Manless to Esp Down -> 3
+// 39  Manless to Esp Up -> 46
+#define MANLESS_OUT_TO_ESP_STOP     8
+#define MANLESS_OUT_TO_ESP_DOWN     3
+#define MANLESS_OUT_TO_ESP_UP       46
 
 // Output
 // 4 Esp to manless
