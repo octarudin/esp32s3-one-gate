@@ -44,6 +44,14 @@ void setup() {
   pinMode(BARRIER_TO_ESP_LS1, INPUT);
   pinMode(BARRIER_TO_ESP_LS2, INPUT);
 
+  pinMode(MANLESS_IN_TO_ESP_STOP, INPUT);
+  pinMode(MANLESS_IN_TO_ESP_DOWN, INPUT);
+  pinMode(MANLESS_IN_TO_ESP_UP, INPUT);
+
+  pinMode(MANLESS_OUT_TO_ESP_STOP, INPUT);
+  pinMode(MANLESS_OUT_TO_ESP_DOWN, INPUT);
+  pinMode(MANLESS_OUT_TO_ESP_UP, INPUT);
+
   /* Output declarations -----------------------------------------------------------*/
   pinMode(ESP_TO_BARRIER_UP, OUTPUT);
   pinMode(ESP_TO_BARRIER_DOWN, OUTPUT);
@@ -53,17 +61,11 @@ void setup() {
   pinMode(ESP_TO_MANLESS_IN_LS2, OUTPUT);
   pinMode(ESP_TO_MANLESS_IN_LOOP1, OUTPUT);
   pinMode(ESP_TO_MANLESS_IN_LOOP2, OUTPUT);
-  pinMode(ESP_TO_MANLESS_IN_STOP, OUTPUT);
-  pinMode(ESP_TO_MANLESS_IN_DOWN, OUTPUT);
-  pinMode(ESP_TO_MANLESS_IN_UP, OUTPUT);
 
   pinMode(ESP_TO_MANLESS_OUT_LS1, OUTPUT);
   pinMode(ESP_TO_MANLESS_OUT_LS2, OUTPUT);
   pinMode(ESP_TO_MANLESS_OUT_LOOP1, OUTPUT);
   pinMode(ESP_TO_MANLESS_OUT_LOOP2, OUTPUT);
-  pinMode(ESP_TO_MANLESS_OUT_STOP, OUTPUT);
-  pinMode(ESP_TO_MANLESS_OUT_DOWN, OUTPUT);
-  pinMode(ESP_TO_MANLESS_OUT_UP, OUTPUT);
 
   /* Initialize all configured peripherals */
   Serial.begin(115200);
@@ -75,11 +77,11 @@ void setup() {
 /* Infinite loop */
 void loop() {
   /* handling inputs */
-  if (digitalRead(LOOP_TO_ESP_IN)) Serial.println("LOOP_TO_ESP_IN");
-  if (digitalRead(LOOP_TO_ESP_LOOP2)) Serial.println("LOOP_TO_ESP_LOOP2");
-  if (digitalRead(LOOP_TO_ESP_LOOP1_OUT)) Serial.println("LOOP_TO_ESP_LOOP1_OUT");
-  if (digitalRead(BARRIER_TO_ESP_LS1)) Serial.println("BARRIER_TO_ESP_LS1");
-  if (digitalRead(BARRIER_TO_ESP_LS2)) Serial.println("BARRIER_TO_ESP_LS2");
+  Serial.printf("LOOP_TO_ESP_IN: %d\r\n",         digitalRead(LOOP_TO_ESP_IN));
+  Serial.printf("LOOP_TO_ESP_LOOP2: %d\r\n",      digitalRead(LOOP_TO_ESP_LOOP2));
+  Serial.printf("LOOP_TO_ESP_LOOP1_OUT: %d\r\n",  digitalRead(LOOP_TO_ESP_LOOP1_OUT));
+  Serial.printf("BARRIER_TO_ESP_LS1: %d\r\n",     digitalRead(BARRIER_TO_ESP_LS1));
+  Serial.printf("BARRIER_TO_ESP_LS2: %d\r\n",     digitalRead(BARRIER_TO_ESP_LS2));
 
   /* handling outputs */
   while (Serial.available() > 0) {
@@ -97,6 +99,7 @@ void loop() {
     resetTimer();
   }
 
+  delay(1000);
 }
 
 /**
@@ -126,68 +129,39 @@ void resetTimer() {
 void processCommand(String command) {
   command.trim();  // hapus spasi/enter
 
-  // Pisahkan berdasarkan koma
-  int commaIndex = command.indexOf(',');
-  if (commaIndex == -1) {
-    Serial.println("Format salah! Gunakan format: PERINTAH,ANGKA");
-    return;
-  }
-
-  String cmd = command.substring(0, commaIndex);
-  String valStr = command.substring(commaIndex + 1);
-  int val = valStr.toInt();
-
   // Eksekusi perintah
-  if (cmd.equalsIgnoreCase("ESP_TO_BARRIER_UP")) {
-    digitalWrite(ESP_TO_BARRIER_UP, val);
+  if (command.equalsIgnoreCase("ESP_TO_BARRIER_UP")) {
+    digitalWrite(ESP_TO_BARRIER_UP, !digitalRead(ESP_TO_BARRIER_UP));
   } 
-  else if (cmd.equalsIgnoreCase("ESP_TO_BARRIER_DOWN")) {
-    digitalWrite(ESP_TO_BARRIER_DOWN, val);
+  else if (command.equalsIgnoreCase("ESP_TO_BARRIER_DOWN")) {
+    digitalWrite(ESP_TO_BARRIER_DOWN, !digitalRead(ESP_TO_BARRIER_DOWN));
   }
-  else if (cmd.equalsIgnoreCase("ESP_TO_BARRIER_STOP")) {
-    digitalWrite(ESP_TO_BARRIER_STOP, val);
+  else if (command.equalsIgnoreCase("ESP_TO_BARRIER_STOP")) {
+    digitalWrite(ESP_TO_BARRIER_STOP, !digitalRead(ESP_TO_BARRIER_STOP));
   }
-  else if (cmd.equalsIgnoreCase("ESP_TO_MANLESS_IN_LS1")) {
-    digitalWrite(ESP_TO_MANLESS_IN_LS1, val);
+  else if (command.equalsIgnoreCase("ESP_TO_MANLESS_IN_LS1")) {
+    digitalWrite(ESP_TO_MANLESS_IN_LS1, !digitalRead(ESP_TO_MANLESS_IN_LS1));
   }
-  else if (cmd.equalsIgnoreCase("ESP_TO_MANLESS_IN_LS2")) {
-    digitalWrite(ESP_TO_MANLESS_IN_LS2, val);
+  else if (command.equalsIgnoreCase("ESP_TO_MANLESS_IN_LS2")) {
+    digitalWrite(ESP_TO_MANLESS_IN_LS2, !digitalRead(ESP_TO_MANLESS_IN_LS2));
   }
-  else if (cmd.equalsIgnoreCase("ESP_TO_MANLESS_IN_LOOP1")) {
-    digitalWrite(ESP_TO_MANLESS_IN_LOOP1, val);
+  else if (command.equalsIgnoreCase("ESP_TO_MANLESS_IN_LOOP1")) {
+    digitalWrite(ESP_TO_MANLESS_IN_LOOP1, !digitalRead(ESP_TO_MANLESS_IN_LOOP1));
   }
-  else if (cmd.equalsIgnoreCase("ESP_TO_MANLESS_IN_LOOP2")) {
-    digitalWrite(ESP_TO_MANLESS_IN_LOOP2, val);
+  else if (command.equalsIgnoreCase("ESP_TO_MANLESS_IN_LOOP2")) {
+    digitalWrite(ESP_TO_MANLESS_IN_LOOP2, !digitalRead(ESP_TO_MANLESS_IN_LOOP2));
   }
-  else if (cmd.equalsIgnoreCase("ESP_TO_MANLESS_IN_STOP")) {
-    digitalWrite(ESP_TO_MANLESS_IN_STOP, val);
+  else if (command.equalsIgnoreCase("ESP_TO_MANLESS_OUT_LS1")) {
+    digitalWrite(ESP_TO_MANLESS_OUT_LS1, !digitalRead(ESP_TO_MANLESS_OUT_LS1));
   }
-  else if (cmd.equalsIgnoreCase("ESP_TO_MANLESS_IN_DOWN")) {
-    digitalWrite(ESP_TO_MANLESS_IN_DOWN, val);
+  else if (command.equalsIgnoreCase("ESP_TO_MANLESS_OUT_LS2")) {
+    digitalWrite(ESP_TO_MANLESS_OUT_LS2, !digitalRead(ESP_TO_MANLESS_OUT_LS2));
   }
-  else if (cmd.equalsIgnoreCase("ESP_TO_MANLESS_IN_UP")) {
-    digitalWrite(ESP_TO_MANLESS_IN_UP, val);
+  else if (command.equalsIgnoreCase("ESP_TO_MANLESS_OUT_LOOP1")) {
+    digitalWrite(ESP_TO_MANLESS_OUT_LOOP1, !digitalRead(ESP_TO_MANLESS_OUT_LOOP1));
   }
-  else if (cmd.equalsIgnoreCase("ESP_TO_MANLESS_OUT_LS1")) {
-    digitalWrite(ESP_TO_MANLESS_OUT_LS1, val);
-  }
-  else if (cmd.equalsIgnoreCase("ESP_TO_MANLESS_OUT_LS2")) {
-    digitalWrite(ESP_TO_MANLESS_OUT_LS2, val);
-  }
-  else if (cmd.equalsIgnoreCase("ESP_TO_MANLESS_OUT_LOOP1")) {
-    digitalWrite(ESP_TO_MANLESS_OUT_LOOP1, val);
-  }
-  else if (cmd.equalsIgnoreCase("ESP_TO_MANLESS_OUT_LOOP2")) {
-    digitalWrite(ESP_TO_MANLESS_OUT_LOOP2, val);
-  }
-  else if (cmd.equalsIgnoreCase("ESP_TO_MANLESS_OUT_STOP")) {
-    digitalWrite(ESP_TO_MANLESS_OUT_STOP, val);
-  }
-  else if (cmd.equalsIgnoreCase("ESP_TO_MANLESS_OUT_DOWN")) {
-    digitalWrite(ESP_TO_MANLESS_OUT_DOWN, val);
-  }
-  else if (cmd.equalsIgnoreCase("ESP_TO_MANLESS_OUT_UP")) {
-    digitalWrite(ESP_TO_MANLESS_OUT_UP, val);
+  else if (command.equalsIgnoreCase("ESP_TO_MANLESS_OUT_LOOP2")) {
+    digitalWrite(ESP_TO_MANLESS_OUT_LOOP2, !digitalRead(ESP_TO_MANLESS_OUT_LOOP2));
   }
   else {
     Serial.println("Perintah tidak dikenal!");
