@@ -77,11 +77,18 @@ void setup() {
 /* Infinite loop */
 void loop() {
   /* handling inputs */
-  Serial.printf("LOOP_TO_ESP_IN: %d\r\n",         digitalRead(LOOP_TO_ESP_IN));
-  Serial.printf("LOOP_TO_ESP_LOOP2: %d\r\n",      digitalRead(LOOP_TO_ESP_LOOP2));
-  Serial.printf("LOOP_TO_ESP_LOOP1_OUT: %d\r\n",  digitalRead(LOOP_TO_ESP_LOOP1_OUT));
-  Serial.printf("BARRIER_TO_ESP_LS1: %d\r\n",     digitalRead(BARRIER_TO_ESP_LS1));
-  Serial.printf("BARRIER_TO_ESP_LS2: %d\r\n",     digitalRead(BARRIER_TO_ESP_LS2));
+  Serial.printf("LOOP_TO_ESP_IN         : %d\r\n",  digitalRead(LOOP_TO_ESP_IN));
+  Serial.printf("LOOP_TO_ESP_LOOP2      : %d\r\n",  digitalRead(LOOP_TO_ESP_LOOP2));
+  Serial.printf("LOOP_TO_ESP_LOOP1_OUT  : %d\r\n",  digitalRead(LOOP_TO_ESP_LOOP1_OUT));
+  Serial.printf("BARRIER_TO_ESP_LS1     : %d\r\n",  digitalRead(BARRIER_TO_ESP_LS1));
+  Serial.printf("BARRIER_TO_ESP_LS2     : %d\r\n",  digitalRead(BARRIER_TO_ESP_LS2));
+  Serial.printf("MANLESS_IN_TO_ESP_STOP : %d\r\n",  digitalRead(MANLESS_IN_TO_ESP_STOP));
+  Serial.printf("MANLESS_IN_TO_ESP_DOWN : %d\r\n",  digitalRead(MANLESS_IN_TO_ESP_DOWN));
+  Serial.printf("MANLESS_IN_TO_ESP_UP   : %d\r\n",  digitalRead(MANLESS_IN_TO_ESP_UP));
+  Serial.printf("MANLESS_OUT_TO_ESP_STOP: %d\r\n",  digitalRead(MANLESS_OUT_TO_ESP_STOP));
+  Serial.printf("MANLESS_OUT_TO_ESP_DOWN: %d\r\n",  digitalRead(MANLESS_OUT_TO_ESP_DOWN));
+  Serial.printf("MANLESS_OUT_TO_ESP_UP  : %d\r\n",  digitalRead(MANLESS_OUT_TO_ESP_UP));
+  Serial.println();
 
   /* handling outputs */
   while (Serial.available() > 0) {
@@ -91,9 +98,7 @@ void loop() {
   }
 
   if (timerExpired) {
-    // Serial.println(str);
     processCommand(str);
-    delay(100);
     str = "";
     timerAlarmDisable(timer);
     resetTimer();
