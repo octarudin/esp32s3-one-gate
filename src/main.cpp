@@ -95,6 +95,7 @@ void loop() {
 
   if (strCompleted) {
     processCommand(str);
+    strCompleted = false;
     str = "";
   }
 
