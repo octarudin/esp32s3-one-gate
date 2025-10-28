@@ -4,10 +4,10 @@
 
 /* Private defines -----------------------------------------------------------*/
 // INPUT
-// 48  Loop to Esp Input In
+// 48  Loop to Esp Input Loop 1 In
 // 47  Loop to Esp Input loop 2
 // 21  Loop to Esp Input Loop 1 Out
-#define LOOP_TO_ESP_IN          48
+#define LOOP_TO_ESP_LOOP1_IN    48
 #define LOOP_TO_ESP_LOOP2       47
 #define LOOP_TO_ESP_LOOP1_OUT   21
 
@@ -15,13 +15,6 @@
 // 37  Barrier to Esp Input LS 2
 #define BARRIER_TO_ESP_LS1      35
 #define BARRIER_TO_ESP_LS2      37
-
-// 39  Esp to Barrier Output Up
-// 40  Esp to Barrier Output Down
-// 41  Esp to Barrier Output Stop
-#define ESP_TO_BARRIER_UP       39
-#define ESP_TO_BARRIER_DOWN     40
-#define ESP_TO_BARRIER_STOP     41
 
 // 1    Manless to Esp Input Stop
 // 2    Manless to Esp Input Down 
@@ -38,6 +31,13 @@
 #define MANLESS_OUT_TO_ESP_UP      46
 
 // OUTPUT
+// 39  Esp to Barrier Output Up
+// 40  Esp to Barrier Output Down
+// 41  Esp to Barrier Output Stop
+#define ESP_TO_BARRIER_UP       39
+#define ESP_TO_BARRIER_DOWN     40
+#define ESP_TO_BARRIER_STOP     41
+
 // 4 Esp to manless
 // 5 Esp to manless
 // 6 Esp to manless
