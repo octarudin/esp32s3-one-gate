@@ -74,7 +74,7 @@ void setup() {
 /* Infinite loop */
 void loop() {
   /* handling all inputs */
-  inputs[LOOP_TO_ESP_LOOP1_IN]    = digitalRead(LOOP_TO_ESP_LOOP1_IN); // LOOP_TO_ESP_LOOP1_IN
+  inputs[LOOP_TO_ESP_LOOP1_IN]    = digitalRead(LOOP_TO_ESP_LOOP1_IN);
   inputs[LOOP_TO_ESP_LOOP2]       = digitalRead(LOOP_TO_ESP_LOOP2);
   inputs[LOOP_TO_ESP_LOOP1_OUT]   = digitalRead(LOOP_TO_ESP_LOOP1_OUT);
   inputs[BARRIER_TO_ESP_LS1]      = digitalRead(BARRIER_TO_ESP_LS1);
