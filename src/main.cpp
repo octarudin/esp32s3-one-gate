@@ -38,11 +38,11 @@ void processCommand(String command);
 void setup() {
   /* Input declarations -----------------------------------------------------------*/
   pinMode(LOOP_TO_ESP_LOOP1_IN, INPUT);
-  pinMode(LOOP_TO_ESP_LOOP2, INPUT);
   pinMode(LOOP_TO_ESP_LOOP1_OUT, INPUT);
 
-  pinMode(BARRIER_TO_ESP_LS1, INPUT);
-  pinMode(BARRIER_TO_ESP_LS2, INPUT);
+  pinMode(BARRIER_TO_ESP_LS_TOP, INPUT);
+  pinMode(BARRIER_TO_ESP_LS_BOT, INPUT);
+  pinMode(BARRIER_TO_ESP_LOOP2, INPUT);
 
   pinMode(MANLESS_IN_TO_ESP_STOP, INPUT);
   pinMode(MANLESS_IN_TO_ESP_DOWN, INPUT);
@@ -57,14 +57,14 @@ void setup() {
   pinMode(ESP_TO_BARRIER_DOWN, OUTPUT);
   pinMode(ESP_TO_BARRIER_STOP, OUTPUT);
 
-  pinMode(ESP_TO_MANLESS_IN_LS1, OUTPUT);
-  pinMode(ESP_TO_MANLESS_IN_LS2, OUTPUT);
-  pinMode(ESP_TO_MANLESS_IN_LOOP1, OUTPUT);
+  pinMode(ESP_TO_MANLESS_IN_LS_TOP, OUTPUT);
+  pinMode(ESP_TO_MANLESS_IN_LS_BOT, OUTPUT);
+  pinMode(ESP_TO_MANLESS_IN_LOOP1_IN, OUTPUT);
   pinMode(ESP_TO_MANLESS_IN_LOOP2, OUTPUT);
 
-  pinMode(ESP_TO_MANLESS_OUT_LS1, OUTPUT);
-  pinMode(ESP_TO_MANLESS_OUT_LS2, OUTPUT);
-  pinMode(ESP_TO_MANLESS_OUT_LOOP1, OUTPUT);
+  pinMode(ESP_TO_MANLESS_OUT_LS_TOP, OUTPUT);
+  pinMode(ESP_TO_MANLESS_OUT_LS_BOT, OUTPUT);
+  pinMode(ESP_TO_MANLESS_OUT_LOOP1_OUT, OUTPUT);
   pinMode(ESP_TO_MANLESS_OUT_LOOP2, OUTPUT);
 
   /* Initialize all configured peripherals */
@@ -75,10 +75,10 @@ void setup() {
 void loop() {
   /* handling all inputs */
   inputs[LOOP_TO_ESP_LOOP1_IN]    = digitalRead(LOOP_TO_ESP_LOOP1_IN);
-  inputs[LOOP_TO_ESP_LOOP2]       = digitalRead(LOOP_TO_ESP_LOOP2);
   inputs[LOOP_TO_ESP_LOOP1_OUT]   = digitalRead(LOOP_TO_ESP_LOOP1_OUT);
-  inputs[BARRIER_TO_ESP_LS1]      = digitalRead(BARRIER_TO_ESP_LS1);
-  inputs[BARRIER_TO_ESP_LS2]      = digitalRead(BARRIER_TO_ESP_LS2);
+  inputs[BARRIER_TO_ESP_LOOP2]    = digitalRead(BARRIER_TO_ESP_LOOP2);
+  inputs[BARRIER_TO_ESP_LS_TOP]   = digitalRead(BARRIER_TO_ESP_LS_TOP);
+  inputs[BARRIER_TO_ESP_LS_BOT]   = digitalRead(BARRIER_TO_ESP_LS_BOT);
   inputs[MANLESS_IN_TO_ESP_STOP]  = digitalRead(MANLESS_IN_TO_ESP_STOP);
   inputs[MANLESS_IN_TO_ESP_DOWN]  = digitalRead(MANLESS_IN_TO_ESP_DOWN);
   inputs[MANLESS_IN_TO_ESP_UP]    = digitalRead(MANLESS_IN_TO_ESP_UP);
@@ -87,10 +87,10 @@ void loop() {
   inputs[MANLESS_OUT_TO_ESP_UP]   = digitalRead(MANLESS_OUT_TO_ESP_UP);
 
   Serial.printf("LOOP_TO_ESP_LOOP1_IN   : %d\r\n",  inputs[LOOP_TO_ESP_LOOP1_IN]);
-  Serial.printf("LOOP_TO_ESP_LOOP2      : %d\r\n",  inputs[LOOP_TO_ESP_LOOP2]);
   Serial.printf("LOOP_TO_ESP_LOOP1_OUT  : %d\r\n",  inputs[LOOP_TO_ESP_LOOP1_OUT]);
-  Serial.printf("BARRIER_TO_ESP_LS1     : %d\r\n",  inputs[BARRIER_TO_ESP_LS1]);
-  Serial.printf("BARRIER_TO_ESP_LS2     : %d\r\n",  inputs[BARRIER_TO_ESP_LS2]);
+  Serial.printf("BARRIER_TO_ESP_LS_TOP  : %d\r\n",  inputs[BARRIER_TO_ESP_LS_TOP]);
+  Serial.printf("BARRIER_TO_ESP_LS_BOT  : %d\r\n",  inputs[BARRIER_TO_ESP_LS_BOT]);
+  Serial.printf("BARRIER_TO_ESP_LOOP2   : %d\r\n",  inputs[BARRIER_TO_ESP_LOOP2]);
   Serial.printf("MANLESS_IN_TO_ESP_STOP : %d\r\n",  inputs[MANLESS_IN_TO_ESP_STOP]);
   Serial.printf("MANLESS_IN_TO_ESP_DOWN : %d\r\n",  inputs[MANLESS_IN_TO_ESP_DOWN]);
   Serial.printf("MANLESS_IN_TO_ESP_UP   : %d\r\n",  inputs[MANLESS_IN_TO_ESP_UP]);
@@ -100,26 +100,35 @@ void loop() {
   Serial.println();
 
   /* condition #1: MANLESS IN FIRST */
-  if ( inputs[LOOP_TO_ESP_LOOP1_OUT] && !inputs[LOOP_TO_ESP_LOOP1_IN] ) {
-    digitalWrite(ESP_TO_MANLESS_IN_LS1,   inputs[BARRIER_TO_ESP_LS1]);
-    digitalWrite(ESP_TO_MANLESS_IN_LS2,   inputs[BARRIER_TO_ESP_LS2]); 
-    digitalWrite(ESP_TO_MANLESS_IN_LOOP1, inputs[LOOP_TO_ESP_LOOP1_IN]);
-    digitalWrite(ESP_TO_MANLESS_IN_LOOP2, inputs[LOOP_TO_ESP_LOOP2]);
+  if ( inputs[LOOP_TO_ESP_LOOP1_IN] && !inputs[LOOP_TO_ESP_LOOP1_OUT] ) {
+    digitalWrite(ESP_TO_MANLESS_IN_LS_TOP,    HIGH);
+    digitalWrite(ESP_TO_MANLESS_IN_LS_BOT,    HIGH); 
+    digitalWrite(ESP_TO_MANLESS_IN_LOOP1_IN,  HIGH);
+    digitalWrite(ESP_TO_MANLESS_IN_LOOP2,     HIGH);
 
-    digitalWrite(ESP_TO_BARRIER_UP,       inputs[MANLESS_IN_TO_ESP_UP]);
-    digitalWrite(ESP_TO_BARRIER_DOWN,     inputs[MANLESS_IN_TO_ESP_DOWN]);
+    digitalWrite(ESP_TO_MANLESS_OUT_LS_TOP,    LOW);
+    digitalWrite(ESP_TO_MANLESS_OUT_LS_BOT,    LOW);
+    digitalWrite(ESP_TO_MANLESS_OUT_LOOP1_OUT, LOW);
+    digitalWrite(ESP_TO_MANLESS_OUT_LOOP2,     LOW);
   }
 
   /* condition #2: MANLESS OUT FIRST */
-  else if ( !inputs[LOOP_TO_ESP_LOOP1_OUT] && inputs[LOOP_TO_ESP_LOOP1_IN] ) {
-    digitalWrite(ESP_TO_MANLESS_OUT_LS1,  inputs[BARRIER_TO_ESP_LS1]);
-    digitalWrite(ESP_TO_MANLESS_OUT_LS2,  inputs[BARRIER_TO_ESP_LS2]);
-    digitalWrite(ESP_TO_MANLESS_OUT_LOOP1,inputs[LOOP_TO_ESP_LOOP1_OUT]);
-    digitalWrite(ESP_TO_MANLESS_OUT_LOOP2,inputs[LOOP_TO_ESP_LOOP2]);
-
-    digitalWrite(ESP_TO_BARRIER_UP,       inputs[MANLESS_OUT_TO_ESP_UP]);
-    digitalWrite(ESP_TO_BARRIER_DOWN,     inputs[MANLESS_OUT_TO_ESP_DOWN]);
+  else if ( !inputs[LOOP_TO_ESP_LOOP1_IN] && inputs[LOOP_TO_ESP_LOOP1_OUT] ) {
+    digitalWrite(ESP_TO_MANLESS_IN_LS_TOP,      LOW);
+    digitalWrite(ESP_TO_MANLESS_IN_LS_BOT,      LOW); 
+    digitalWrite(ESP_TO_MANLESS_IN_LOOP1_IN,    LOW);
+    digitalWrite(ESP_TO_MANLESS_IN_LOOP2,       LOW);
+    
+    digitalWrite(ESP_TO_MANLESS_OUT_LS_TOP,    HIGH);
+    digitalWrite(ESP_TO_MANLESS_OUT_LS_BOT,    HIGH);
+    digitalWrite(ESP_TO_MANLESS_OUT_LOOP1_OUT, HIGH);
+    digitalWrite(ESP_TO_MANLESS_OUT_LOOP2,     HIGH);
   }
+
+  /* handling MANLESS feedback */
+  digitalWrite(ESP_TO_BARRIER_STOP, inputs[MANLESS_IN_TO_ESP_STOP] | inputs[MANLESS_OUT_TO_ESP_STOP]);
+  digitalWrite(ESP_TO_BARRIER_DOWN, inputs[MANLESS_IN_TO_ESP_DOWN] | inputs[MANLESS_OUT_TO_ESP_DOWN]);
+  digitalWrite(ESP_TO_BARRIER_UP,   inputs[MANLESS_IN_TO_ESP_UP]   | inputs[MANLESS_OUT_TO_ESP_UP]);
 
   /* handling outputs */
   while (Serial.available() > 0) {
@@ -147,13 +156,13 @@ void loop() {
   *         ESP_TO_BARRIER_UP
   *         ESP_TO_BARRIER_DOWN
   *         ESP_TO_BARRIER_STOP
-  *         ESP_TO_MANLESS_IN_LS1
-  *         ESP_TO_MANLESS_IN_LS2
-  *         ESP_TO_MANLESS_IN_LOOP1
+  *         ESP_TO_MANLESS_IN_LS_TOP
+  *         ESP_TO_MANLESS_IN_LS_BOT
+  *         ESP_TO_MANLESS_IN_LOOP1_IN
   *         ESP_TO_MANLESS_IN_LOOP2
-  *         ESP_TO_MANLESS_OUT_LS1
-  *         ESP_TO_MANLESS_OUT_LS2
-  *         ESP_TO_MANLESS_OUT_LOOP1
+  *         ESP_TO_MANLESS_OUT_LS_TOP
+  *         ESP_TO_MANLESS_OUT_LS_BOT
+  *         ESP_TO_MANLESS_OUT_LOOP1_OUT
   *         ESP_TO_MANLESS_OUT_LOOP2
   * @retval None
   */
@@ -170,26 +179,26 @@ void processCommand(String command) {
   else if (command.equalsIgnoreCase("ESP_TO_BARRIER_STOP")) {
     digitalWrite(ESP_TO_BARRIER_STOP, !digitalRead(ESP_TO_BARRIER_STOP));
   }
-  else if (command.equalsIgnoreCase("ESP_TO_MANLESS_IN_LS1")) {
-    digitalWrite(ESP_TO_MANLESS_IN_LS1, !digitalRead(ESP_TO_MANLESS_IN_LS1));
+  else if (command.equalsIgnoreCase("ESP_TO_MANLESS_IN_LS_TOP")) {
+    digitalWrite(ESP_TO_MANLESS_IN_LS_TOP, !digitalRead(ESP_TO_MANLESS_IN_LS_TOP));
   }
-  else if (command.equalsIgnoreCase("ESP_TO_MANLESS_IN_LS2")) {
-    digitalWrite(ESP_TO_MANLESS_IN_LS2, !digitalRead(ESP_TO_MANLESS_IN_LS2));
+  else if (command.equalsIgnoreCase("ESP_TO_MANLESS_IN_LS_BOT")) {
+    digitalWrite(ESP_TO_MANLESS_IN_LS_BOT, !digitalRead(ESP_TO_MANLESS_IN_LS_BOT));
   }
-  else if (command.equalsIgnoreCase("ESP_TO_MANLESS_IN_LOOP1")) {
-    digitalWrite(ESP_TO_MANLESS_IN_LOOP1, !digitalRead(ESP_TO_MANLESS_IN_LOOP1));
+  else if (command.equalsIgnoreCase("ESP_TO_MANLESS_IN_LOOP1_IN")) {
+    digitalWrite(ESP_TO_MANLESS_IN_LOOP1_IN, !digitalRead(ESP_TO_MANLESS_IN_LOOP1_IN));
   }
   else if (command.equalsIgnoreCase("ESP_TO_MANLESS_IN_LOOP2")) {
     digitalWrite(ESP_TO_MANLESS_IN_LOOP2, !digitalRead(ESP_TO_MANLESS_IN_LOOP2));
   }
-  else if (command.equalsIgnoreCase("ESP_TO_MANLESS_OUT_LS1")) {
-    digitalWrite(ESP_TO_MANLESS_OUT_LS1, !digitalRead(ESP_TO_MANLESS_OUT_LS1));
+  else if (command.equalsIgnoreCase("ESP_TO_MANLESS_OUT_LS_TOP")) {
+    digitalWrite(ESP_TO_MANLESS_OUT_LS_TOP, !digitalRead(ESP_TO_MANLESS_OUT_LS_TOP));
   }
-  else if (command.equalsIgnoreCase("ESP_TO_MANLESS_OUT_LS2")) {
-    digitalWrite(ESP_TO_MANLESS_OUT_LS2, !digitalRead(ESP_TO_MANLESS_OUT_LS2));
+  else if (command.equalsIgnoreCase("ESP_TO_MANLESS_OUT_LS_BOT")) {
+    digitalWrite(ESP_TO_MANLESS_OUT_LS_BOT, !digitalRead(ESP_TO_MANLESS_OUT_LS_BOT));
   }
-  else if (command.equalsIgnoreCase("ESP_TO_MANLESS_OUT_LOOP1")) {
-    digitalWrite(ESP_TO_MANLESS_OUT_LOOP1, !digitalRead(ESP_TO_MANLESS_OUT_LOOP1));
+  else if (command.equalsIgnoreCase("ESP_TO_MANLESS_OUT_LOOP1_OUT")) {
+    digitalWrite(ESP_TO_MANLESS_OUT_LOOP1_OUT, !digitalRead(ESP_TO_MANLESS_OUT_LOOP1_OUT));
   }
   else if (command.equalsIgnoreCase("ESP_TO_MANLESS_OUT_LOOP2")) {
     digitalWrite(ESP_TO_MANLESS_OUT_LOOP2, !digitalRead(ESP_TO_MANLESS_OUT_LOOP2));

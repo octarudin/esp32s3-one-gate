@@ -5,16 +5,16 @@
 /* Private defines -----------------------------------------------------------*/
 // INPUT
 // 48  Loop to Esp Input Loop 1 In
-// 47  Loop to Esp Input loop 2
 // 21  Loop to Esp Input Loop 1 Out
 #define LOOP_TO_ESP_LOOP1_IN    48
-#define LOOP_TO_ESP_LOOP2       47
 #define LOOP_TO_ESP_LOOP1_OUT   21
 
 // 36  Barrier to Esp Input LS 1 -> 35
 // 37  Barrier to Esp Input LS 2
-#define BARRIER_TO_ESP_LS1      35
-#define BARRIER_TO_ESP_LS2      37
+// 47  Barrier to Esp Loop 2
+#define BARRIER_TO_ESP_LS_TOP   35
+#define BARRIER_TO_ESP_LS_BOT   37
+#define BARRIER_TO_ESP_LOOP2    47
 
 // 1    Manless to Esp Input Stop
 // 2    Manless to Esp Input Down 
@@ -46,14 +46,14 @@
 // 16 Esp to manless
 // 17 Esp to manless
 // 18 Esp to manless
-#define ESP_TO_MANLESS_IN_LS1 4
-#define ESP_TO_MANLESS_IN_LS2 5
-#define ESP_TO_MANLESS_IN_LOOP1 6
-#define ESP_TO_MANLESS_IN_LOOP2 7
+#define ESP_TO_MANLESS_IN_LS_TOP     4
+#define ESP_TO_MANLESS_IN_LS_BOT     5
+#define ESP_TO_MANLESS_IN_LOOP1_IN   6
+#define ESP_TO_MANLESS_IN_LOOP2      7
 
-#define ESP_TO_MANLESS_OUT_LS1 15
-#define ESP_TO_MANLESS_OUT_LS2 16
-#define ESP_TO_MANLESS_OUT_LOOP1 17
-#define ESP_TO_MANLESS_OUT_LOOP2 18
+#define ESP_TO_MANLESS_OUT_LS_TOP    15
+#define ESP_TO_MANLESS_OUT_LS_BOT    16
+#define ESP_TO_MANLESS_OUT_LOOP1_OUT 17
+#define ESP_TO_MANLESS_OUT_LOOP2     18
 
 #endif /* __DEFINES_H */
